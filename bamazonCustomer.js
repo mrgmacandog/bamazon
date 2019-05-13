@@ -29,8 +29,6 @@ connection.connect(function (err) {
 
     displayProducts();
 
-
-
     connection.end();
 });
 
@@ -65,8 +63,44 @@ function displayProducts() {
                 table.push(tableRow);
             });
 
-            // Display table in command line
+            // Display the table
             console.log(table.toString());
+
+            // Get user input for purchase
+            promptPurchase();
         }
     );
+}
+
+/**
+ * Get user input for the product ID and quantity
+ */
+function promptPurchase() {
+    // Create a "Prompt" with a series of questions
+    inquirer.prompt([
+        // Get user input for the ID of the product
+        {
+            type: "input",
+            message: "Product ID?",
+            name: "id",
+        },
+        // Get user input for quantity of the product
+        {
+            type: "input",
+            message: "Quantity?",
+            name: "quantity",
+
+            // Validate input by making sure it's an integer greater than 0;
+            validate: function (input) {
+                let isValid = Number.isInteger(parseFloat(input)) && input > 0;
+
+                // Give error message if input is not valid
+                return isValid || "Please enter a whole number greater than 0.";
+            }
+        }
+    ]).then(function (inquirerResponse) {
+        console.log(`\nCART`);
+        console.log(`ID:       ${inquirerResponse.id}`);
+        console.log(`Quantity: ${inquirerResponse.quantity}`);
+    });
 }
