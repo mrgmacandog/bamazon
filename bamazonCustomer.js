@@ -7,6 +7,12 @@ const keys = require("./keys.js");
 // Include the mysql package
 const mysql = require("mysql");
 
+// Include the inquirer package
+const inquirer = require("inquirer");
+
+// Include cli-table package
+const Table = require('cli-table');
+
 // Create the way to refer the bamazon database
 const connection = mysql.createConnection({
     host: "localhost",
@@ -21,13 +27,46 @@ connection.connect(function (err) {
     // If there is an error, throw it
     if (err) throw err;
 
-    connection.query(
-        "SELECT * FROM products",
-        function (err, res) {
-            if (err) throw err;
-            console.log(res);
-        }
-    );
+    displayProducts();
+
+
 
     connection.end();
 });
+
+/**
+ * Display the current invetory of products in the database including 
+ * the product id, the name, department, price, and quantity.
+ */
+function displayProducts() {
+    connection.query(
+        "SELECT * FROM products",  // Select all the records from the table
+        function (err, res) {
+            // If there is an error, throw it
+            if (err) throw err;
+
+            // Create a table
+            let table = new Table({
+                head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
+                colWidths: [10, 25, 25, 13, 10],
+                colAligns: ["right", null, null, "right", "right"]
+            });
+
+            // Loop through each record in the DB table
+            res.forEach(function (product) {
+                let tableRow = [];
+
+                // Loop through each column of a record
+                for (let key in product) {
+                    tableRow.push(product[key]);
+                }
+
+                // Add record information from DB table
+                table.push(tableRow);
+            });
+
+            // Display table in command line
+            console.log(table.toString());
+        }
+    );
+}
