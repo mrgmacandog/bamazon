@@ -7,6 +7,9 @@ const keys = require("./keys.js");
 // Include the mysql package
 const mysql = require("mysql");
 
+// Include Bamazon package
+const Bamazon = require("./bamazonDB.js");
+
 // Include the inquirer package
 const inquirer = require("inquirer");
 
@@ -21,6 +24,9 @@ const connection = mysql.createConnection({
     password: keys.rootPassword,
     database: "bamazon"
 });
+
+// Instantiate a Bamazon object with the a connection to the Bamazon DB
+let bamazon = new Bamazon(connection);
 
 // Connect to the bamazon database
 connection.connect(function (err) {
@@ -37,39 +43,34 @@ connection.connect(function (err) {
  * the product id, the name, department, price, and quantity.
  */
 function displayProducts() {
-    connection.query(
-        "SELECT * FROM products",  // Select all the records from the table
-        function (err, res) {
-            // If there is an error, throw it
-            if (err) throw err;
+    // Get all the products from the DB
+    bamazon.selectAllFrom("products", function (res) {
+        // Create a table
+        let table = new Table({
+            head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
+            // colWidths: [10, 25, 25, 13, 10],
+            colAligns: ["right", null, null, "right", "right"]
+        });
 
-            // Create a table
-            let table = new Table({
-                head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
-                colWidths: [10, 25, 25, 13, 10],
-                colAligns: ["right", null, null, "right", "right"]
-            });
+        // Loop through each record in the DB table
+        res.forEach(function (product) {
+            let tableRow = [];
 
-            // Loop through each record in the DB table
-            res.forEach(function (product) {
-                let tableRow = [];
+            // Loop through each column of a record
+            for (let key in product) {
+                tableRow.push(product[key]);
+            }
 
-                // Loop through each column of a record
-                for (let key in product) {
-                    tableRow.push(product[key]);
-                }
+            // Add record information from DB table
+            table.push(tableRow);
+        });
 
-                // Add record information from DB table
-                table.push(tableRow);
-            });
+        // Display the table
+        console.log(table.toString());
 
-            // Display the table
-            console.log(table.toString());
-
-            // Get user input for purchase
-            promptPurchase();
-        }
-    );
+        // Get user input for purchase
+        promptPurchase();
+    });
 }
 
 /**
