@@ -35,7 +35,7 @@ connection.connect(function (err) {
 
     displayProducts();
 
-    connection.end();
+    // connection.end();
 });
 
 /**
@@ -100,8 +100,20 @@ function promptPurchase() {
             }
         }
     ]).then(function (inquirerResponse) {
+        // TODO: confirm if what's written is correct
         console.log(`\nCART`);
         console.log(`ID:       ${inquirerResponse.id}`);
         console.log(`Quantity: ${inquirerResponse.quantity}`);
+
+        bamazon.selectAllFromWhere("products", "id", inquirerResponse.id, function (res) {
+            if (res.length < 1) {
+                console.log("Could not find the item in the database.");
+            } else {  // TODO: Check if quantity is sufficient and update DB.
+                console.log("Order complete!");
+            }
+
+            // TODO: This may move somewhere else
+            connection.end();
+        })
     });
 }
