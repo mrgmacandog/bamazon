@@ -100,16 +100,28 @@ function promptPurchase() {
             }
         }
     ]).then(function (inquirerResponse) {
-        // TODO: confirm if what's written is correct
-        console.log(`\nCART`);
-        console.log(`ID:       ${inquirerResponse.id}`);
-        console.log(`Quantity: ${inquirerResponse.quantity}`);
+        // // TODO: confirm if what's written is correct
+        // console.log(`\nCART`);
+        // console.log(`ID:       ${inquirerResponse.id}`);
+        // console.log(`Quantity: ${inquirerResponse.quantity}`);
 
-        bamazon.selectAllFromWhere("products", "id", inquirerResponse.id, function (res) {
+        bamazon.selectAllFromWhere("products", "id", inquirerResponse.id.split(" ").join(""), function (res) {
+            // If no item with given id and DB returns 0 records
             if (res.length < 1) {
-                console.log("Could not find the item in the database.");
+                console.log(`Could not find the item with id "${inquirerResponse.id}" in the database.`);
             } else {  // TODO: Check if quantity is sufficient and update DB.
-                console.log("Order complete!");
+                // Item stock quantity
+                let availableStock = res[0].stock_quantity;
+
+                // If the user the quantity inputs is less the the stock quantity
+                if (inquirerResponse.quantity < availableStock) {
+                    // Update DB
+                    console.log("Purchased!");
+                } else {
+                    console.log(`Your order could not be completed due to insufficient stock quant.`);
+                    console.log(`Your quantity:  ${inquirerResponse.quantity}`);
+                    console.log(`Stock quantity: ${availableStock}`);
+                }
             }
 
             // TODO: This may move somewhere else
