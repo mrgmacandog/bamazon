@@ -102,6 +102,27 @@ function Bamazon(bamazonConnection) {
         // Display the table
         console.log(table.toString());
     }
+
+    this.createProduct = function (id, product_name, department_name, price, stock_quantity, callback) {
+        bamazonConnection.query(
+            "INSERT INTO products SET ?",
+            {
+                id: id,
+                product_name: product_name,
+                department_name: department_name,
+                price: price,
+                stock_quantity: stock_quantity
+
+            },
+            function (err, res) {
+                // If there is an error, throw it
+                if (err) throw err;
+
+                // Callback for the response
+                callback(res);
+            }
+        );
+    }
 }
 
 // Export Bamazon object

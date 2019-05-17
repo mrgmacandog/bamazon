@@ -199,6 +199,51 @@ function handleSearchID(inquirerResponse, queryRes) {
 function addProd() {
     console.log("Inside: Add New Product");
 
-    // End the connection
-    connection.end();
+    // Get all ids
+
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "Product ID?",
+            name: "id",
+        },
+        {
+            type: "input",
+            message: "Product name?",
+            name: "product_name",
+        },
+        {
+            type: "input",
+            message: "Department name?",
+            name: "department_name",
+        },
+        {
+            type: "input",
+            message: "Product price?",
+            name: "price",
+        },
+        {
+            type: "input",
+            message: "Stock quantity?",
+            name: "stock_quantity",
+
+            // Validate input by making sure it's an integer greater than 0;
+            validate: function (input) {
+                let isValid = Number.isInteger(parseFloat(input)) && input > 0;
+
+                // Give error message if input is not valid
+                return isValid || "Please enter a whole number greater than 0.";
+            }
+        },
+    ]).then(function (inquirerResponse) {
+        bamazon.createProduct(inquirerResponse.id,
+            inquirerResponse.product_name,
+            inquirerResponse.department_name,
+            inquirerResponse.price,
+            inquirerResponse.stock_quantity,
+            function () {
+                // End the connection
+                connection.end();
+            })
+    });
 }
