@@ -75,6 +75,10 @@ function Bamazon(bamazonConnection) {
         )
     }
 
+    /**
+     * Callback function used to print a table of data from a MySQL query
+     * @param {Object} res Data from MySQL query
+     */
     this.showTable = function (res) {
         // Create a table
         let table = new Table({

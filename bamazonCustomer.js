@@ -13,9 +13,6 @@ const Bamazon = require("./bamazonDB.js");
 // Include the inquirer package
 const inquirer = require("inquirer");
 
-// Include cli-table package
-const Table = require('cli-table');
-
 // Create the way to refer the bamazon database
 const connection = mysql.createConnection({
     host: "localhost",
@@ -128,7 +125,7 @@ function handleSearchID(inquirerResponse, queryRes) {
 
         // Prompt for another purchase
         promptAnotherPurchase();
-    } else {  // TODO: Check if quantity is sufficient and update DB.
+    } else {
         // Item stock quantity
         let availableStock = queryRes[0].stock_quantity;
 
@@ -166,7 +163,7 @@ function promptAnotherPurchase() {
             name: "anotherPurchase",
         },
     ]).then(function (inquirerResponse) {
-        // If yes to promt
+        // If yes to prompt
         if (inquirerResponse.anotherPurchase) {
             // Show products again
             displayProducts();
