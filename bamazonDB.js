@@ -1,3 +1,6 @@
+// Include cli-table package
+const Table = require('cli-table');
+
 /**
  * Bamazon object used to access data from the Bamazon DB connection
  * @param {Object} bamazonConnection 
@@ -70,6 +73,34 @@ function Bamazon(bamazonConnection) {
                 callback(res);
             }
         )
+    }
+
+    /**
+     * Callback function used to print a table of data from a MySQL query
+     * @param {Object} res Data from MySQL query
+     */
+    this.showTable = function (res) {
+        // Create a table
+        let table = new Table({
+            head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
+            colAligns: ["right", null, null, "right", "right"]
+        });
+
+        // Loop through each record in the DB table
+        res.forEach(function (product) {
+            let tableRow = [];
+
+            // Loop through each column of a record
+            for (let key in product) {
+                tableRow.push(product[key]);
+            }
+
+            // Add record information from DB table
+            table.push(tableRow);
+        });
+
+        // Display the table
+        console.log(table.toString());
     }
 }
 
