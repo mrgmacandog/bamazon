@@ -78,27 +78,28 @@ function viewAllProd() {
 
     // TODO refactor this block
     bamazon.selectAllFrom("products", function (res) {
-        // Create a table
-        let table = new Table({
-            head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
-            colAligns: ["right", null, null, "right", "right"]
-        });
+        bamazon.showTable(res);
+        // // Create a table
+        // let table = new Table({
+        //     head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
+        //     colAligns: ["right", null, null, "right", "right"]
+        // });
 
-        // Loop through each record in the DB table
-        res.forEach(function (product) {
-            let tableRow = [];
+        // // Loop through each record in the DB table
+        // res.forEach(function (product) {
+        //     let tableRow = [];
 
-            // Loop through each column of a record
-            for (let key in product) {
-                tableRow.push(product[key]);
-            }
+        //     // Loop through each column of a record
+        //     for (let key in product) {
+        //         tableRow.push(product[key]);
+        //     }
 
-            // Add record information from DB table
-            table.push(tableRow);
-        });
+        //     // Add record information from DB table
+        //     table.push(tableRow);
+        // });
 
-        // Display the table
-        console.log(table.toString());
+        // // Display the table
+        // console.log(table.toString());
     });
 }
 
@@ -107,27 +108,28 @@ function viewLowInv() {
 
     // TODO refactor this block
     bamazon.selectAllFromWhere("products", "stock_quantity", "<", 5, function (res) {
-        // Create a table
-        let table = new Table({
-            head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
-            colAligns: ["right", null, null, "right", "right"]
-        });
+        bamazon.showTable(res);
+        // // Create a table
+        // let table = new Table({
+        //     head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
+        //     colAligns: ["right", null, null, "right", "right"]
+        // });
 
-        // Loop through each record in the DB table
-        res.forEach(function (product) {
-            let tableRow = [];
+        // // Loop through each record in the DB table
+        // res.forEach(function (product) {
+        //     let tableRow = [];
 
-            // Loop through each column of a record
-            for (let key in product) {
-                tableRow.push(product[key]);
-            }
+        //     // Loop through each column of a record
+        //     for (let key in product) {
+        //         tableRow.push(product[key]);
+        //     }
 
-            // Add record information from DB table
-            table.push(tableRow);
-        });
+        //     // Add record information from DB table
+        //     table.push(tableRow);
+        // });
 
-        // Display the table
-        console.log(table.toString());
+        // // Display the table
+        // console.log(table.toString());
     });
 }
 

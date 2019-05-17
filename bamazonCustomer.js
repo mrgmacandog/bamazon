@@ -42,6 +42,15 @@ connection.connect(function (err) {
  */
 function displayProducts() {
     // Get all the products from the DB
+    bamazon.selectAllFrom("products", function (res) {
+        // Print all the products in a table
+        bamazon.showTable(res);
+
+         // Get user input for additional purchase
+        promptPurchase();
+    });
+    /*
+    // Get all the products from the DB
     // TODO refactor this block
     bamazon.selectAllFrom("products", function (res) {
         // Create a table
@@ -69,6 +78,7 @@ function displayProducts() {
         // Get user input for purchase
         promptPurchase();
     });
+    */
 }
 
 /**
