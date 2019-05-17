@@ -99,7 +99,7 @@ function promptPurchase() {
         }
     ]).then(function (inquirerResponse) {
         // Search DB for product id
-        bamazon.selectAllFromWhere("products", "id", inquirerResponse.id.split(" ").join(""), function (queryRes) {
+        bamazon.selectAllFromWhere("products", "id", "=", inquirerResponse.id.split(" ").join(""), function (queryRes) {
             // Decide what to do with given id
             handleSearchID(inquirerResponse, queryRes);
         });

@@ -26,13 +26,13 @@ function Bamazon(bamazonConnection) {
      * the passed in value for the passed in column.
      * @param {String} table Table name in the Bamazon DB
      * @param {String} column Column name in the Bamazon DB
+     * @param {String} operator Operator ("<", "<=", "=", ">=", ">")
      * @param {String} value Filter value
      * @param {function} callback Callback function for the response
      */
-    this.selectAllFromWhere = function (table, column, value, callback) {
+    this.selectAllFromWhere = function (table, column, operator, value, callback) {
         bamazonConnection.query(
-            // "SELECT * FROM products WHERE id = ?",  // Select all the records from the table
-            `SELECT * FROM ${table} WHERE ${column} = ?`,
+            `SELECT * FROM ${table} WHERE ${column} ${operator} ?`,
             [value],
             function (err, res) {
                 // If there is an error, throw it
