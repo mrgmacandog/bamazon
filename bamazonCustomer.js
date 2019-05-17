@@ -100,28 +100,7 @@ function promptPurchase() {
     ]).then(function (inquirerResponse) {
         // Search DB for product id
         bamazon.selectAllFromWhere("products", "id", inquirerResponse.id.split(" ").join(""), function (queryRes) {
-            // If no item with given id and DB returns 0 records
-            // if (res.length < 1) {
-            //     console.log(`\nError: Could not find product with id "${inquirerResponse.id}" in the database.\n`);
-            // } else {  // TODO: Check if quantity is sufficient and update DB.
-            //     // Item stock quantity
-            //     let availableStock = res[0].stock_quantity;
-
-            //     // If the user the quantity inputs is less the the stock quantity
-            //     if (inquirerResponse.quantity < availableStock) {
-            //         // Update DB my reducing stock_quantity for the id
-            //         bamazon.updateStockQuantity(availableStock - inquirerResponse.quantity, inquirerResponse.id, function () {
-            //             console.log(`\nAn order of ${inquirerResponse.quantity} ${res[0].product_name} has been completed!\n`);
-            //         });
-            //     } else {
-            //         console.log("\nError: Insufficient quantity.");
-            //         console.log(`Desired quantity: ${inquirerResponse.quantity}`);
-            //         console.log(`Stock quantity:   ${availableStock}\n`);
-            //     }
-            // }
-
-            // // End connection
-            // connection.end();
+            // Decide what to do with given id
             handleSearchID(inquirerResponse, queryRes);
         });
     });
