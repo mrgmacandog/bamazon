@@ -115,8 +115,10 @@ function promptPurchase() {
 
                 // If the user the quantity inputs is less the the stock quantity
                 if (inquirerResponse.quantity < availableStock) {
-                    // Update DB
-                    console.log("Purchased!");
+                    // Update DB my reducing stock_quantity for the id
+                    bamazon.updateStockQuantity(availableStock - inquirerResponse.quantity, inquirerResponse.id, function () {
+                        console.log("Purchased!");
+                    });
                 } else {
                     console.log(`Your order could not be completed due to insufficient stock quant.`);
                     console.log(`Your quantity:  ${inquirerResponse.quantity}`);

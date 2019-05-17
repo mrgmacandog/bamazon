@@ -14,7 +14,7 @@ function Bamazon(bamazonConnection) {
             function (err, res) {
                 // If there is an error, throw it
                 if (err) throw err;
-                
+
                 // Callback for the response
                 callback(res);
             }
@@ -37,7 +37,35 @@ function Bamazon(bamazonConnection) {
             function (err, res) {
                 // If there is an error, throw it
                 if (err) throw err;
-                
+
+                // Callback for the response
+                callback(res);
+            }
+        )
+    }
+
+    /**
+     * Updates the given ID's stock quantity
+     * @param {String} newQuantity New value for the stock quantity in Bamazon DB
+     * @param {String} chosenID ID that needs to have its stock updated
+     * @param {function} callback Callback function for the response
+     */
+    this.updateStockQuantity = function (newQuantity, chosenID, callback) {
+        // Update record of ID given
+        bamazonConnection.query(
+            "UPDATE products SET ? WHERE ?",
+            [
+                {
+                    stock_quantity: newQuantity
+                },
+                {
+                    id: chosenID
+                }
+            ],
+            function (err, res) {
+                // If there is an error, throw it
+                if (err) throw err;
+
                 // Callback for the response
                 callback(res);
             }
