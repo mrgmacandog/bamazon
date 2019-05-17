@@ -42,11 +42,11 @@ connection.connect(function (err) {
  */
 function displayProducts() {
     // Get all the products from the DB
+    // TODO refactor this block
     bamazon.selectAllFrom("products", function (res) {
         // Create a table
         let table = new Table({
             head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
-            // colWidths: [10, 25, 25, 13, 10],
             colAligns: ["right", null, null, "right", "right"]
         });
 
