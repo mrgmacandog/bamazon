@@ -64,80 +64,47 @@ function promptSelection() {
                 addProd();
                 break;
         }
-
-        // // End the connection
-        // connection.end();
     });
 }
 
+/**
+ * View all products
+ */
 function viewAllProd() {
-    console.log("Inside: View Products for Sale");
+    console.log();
 
-    // TODO refactor this block
+    // Select all records from products table
     bamazon.selectAllFrom("products", function (res) {
+        // Print a table with the records
         bamazon.showTable(res);
 
-        // End the connection
-        connection.end();
-        // // Create a table
-        // let table = new Table({
-        //     head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
-        //     colAligns: ["right", null, null, "right", "right"]
-        // });
-
-        // // Loop through each record in the DB table
-        // res.forEach(function (product) {
-        //     let tableRow = [];
-
-        //     // Loop through each column of a record
-        //     for (let key in product) {
-        //         tableRow.push(product[key]);
-        //     }
-
-        //     // Add record information from DB table
-        //     table.push(tableRow);
-        // });
-
-        // // Display the table
-        // console.log(table.toString());
+        // Prompt if another action is desired
+        promptAnotherAction();
     });
 }
 
+/**
+ * View all products that have a stock quantity less than 5
+ */
 function viewLowInv() {
-    console.log("Inside: View Low Inventory");
+    console.log();
 
-    // TODO refactor this block
+    // Select all records from products table where stock quantity is less than 5
     bamazon.selectAllFromWhere("products", "stock_quantity", "<", 5, function (res) {
+        // Print a table with the records
         bamazon.showTable(res);
 
-        // End the connection
-        connection.end();
-        // // Create a table
-        // let table = new Table({
-        //     head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
-        //     colAligns: ["right", null, null, "right", "right"]
-        // });
-
-        // // Loop through each record in the DB table
-        // res.forEach(function (product) {
-        //     let tableRow = [];
-
-        //     // Loop through each column of a record
-        //     for (let key in product) {
-        //         tableRow.push(product[key]);
-        //     }
-
-        //     // Add record information from DB table
-        //     table.push(tableRow);
-        // });
-
-        // // Display the table
-        // console.log(table.toString());
+        // Prompt if another action is desired
+        promptAnotherAction();
     });
 }
 
+/**
+ * Increase stock quantity of a product
+ */
 function addInv() {
-    console.log("Inside: Add to Inventory");
+    console.log();
+
     // Create a "Prompt" with a series of questions
     inquirer.prompt([
         // Get user input for the ID of the product
@@ -146,7 +113,7 @@ function addInv() {
             message: "Product ID?",
             name: "id",
         },
-        // Get user input for quantity of the product
+        // Get user input for quantity added to the product
         {
             type: "input",
             message: "Quantity?",
@@ -185,22 +152,24 @@ function handleSearchID(inquirerResponse, queryRes) {
         // Item stock quantity
         let availableStock = queryRes[0].stock_quantity;
 
+        // Update the quantity of the chosen product
         bamazon.updateStockQuantity(availableStock + parseInt(inquirerResponse.quantity), inquirerResponse.id, function () {
             // Notify manager that it the stock has been increased
-            console.log(`\nAn order of ${inquirerResponse.quantity} ${queryRes[0].product_name} has been placed!\n`);
             console.log(`\nThe inventory of ${queryRes[0].product_name} has increased from ${availableStock} to ${availableStock + parseInt(inquirerResponse.quantity)}\n`);
 
-            // End the connection
-            connection.end();
+            // Prompt if another action is desired
+            promptAnotherAction();
         });
     }
 }
 
+/**
+ * Add new product to the DB
+ */
 function addProd() {
-    console.log("Inside: Add New Product");
+    console.log();
 
-    // Get all ids
-
+    // Prompt user for product information
     inquirer.prompt([
         {
             type: "input",
@@ -236,14 +205,44 @@ function addProd() {
             }
         },
     ]).then(function (inquirerResponse) {
+        // Create a record in the database with the product information
         bamazon.createProduct(inquirerResponse.id,
             inquirerResponse.product_name,
             inquirerResponse.department_name,
             inquirerResponse.price,
             inquirerResponse.stock_quantity,
             function () {
-                // End the connection
-                connection.end();
-            })
+                console.log("\nProduct successfuly added!\n");
+
+                // Prompt if another action is desired
+                promptAnotherAction();
+            }
+        );
+    })
+}
+
+/**
+ * Asks user if another action is desired
+ */
+function promptAnotherAction() {
+    inquirer.prompt([
+        // Prompt user for yes or no
+        {
+            type: "confirm",
+            message: "Would you like to perform another action?",
+            name: "anotherAction",
+        },
+    ]).then(function (inquirerResponse) {
+        // If yes to prompt
+        if (inquirerResponse.anotherAction) {
+            console.log();
+            // Show products again
+            promptSelection();
+        } else {
+            console.log("\nGoodbye!\n");
+
+            // End DB connection
+            connection.end();
+        }
     });
 }

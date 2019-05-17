@@ -46,42 +46,14 @@ function displayProducts() {
          // Get user input for additional purchase
         promptPurchase();
     });
-    /*
-    // Get all the products from the DB
-    // TODO refactor this block
-    bamazon.selectAllFrom("products", function (res) {
-        // Create a table
-        let table = new Table({
-            head: ["ID", "Product", "Department", "Price (USD)", "Quantity"],
-            colAligns: ["right", null, null, "right", "right"]
-        });
-
-        // Loop through each record in the DB table
-        res.forEach(function (product) {
-            let tableRow = [];
-
-            // Loop through each column of a record
-            for (let key in product) {
-                tableRow.push(product[key]);
-            }
-
-            // Add record information from DB table
-            table.push(tableRow);
-        });
-
-        // Display the table
-        console.log(table.toString());
-
-        // Get user input for purchase
-        promptPurchase();
-    });
-    */
 }
 
 /**
  * Get user input for the product ID and quantity
  */
 function promptPurchase() {
+    console.log();
+
     // Create a "Prompt" with a series of questions
     inquirer.prompt([
         // Get user input for the ID of the product
@@ -130,7 +102,7 @@ function handleSearchID(inquirerResponse, queryRes) {
         let availableStock = queryRes[0].stock_quantity;
 
         // If the user the quantity inputs is less the the stock quantity
-        if (inquirerResponse.quantity < availableStock) {
+        if (inquirerResponse.quantity <= availableStock) {
             // Update DB my reducing stock_quantity for the id
             bamazon.updateStockQuantity(availableStock - inquirerResponse.quantity, inquirerResponse.id, function () {
                 // Notify user that the order has been placed
